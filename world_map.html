@@ -25,8 +25,8 @@
     const data = new Map();
     const colorScale = d3.scaleThreshold()
         //.domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
-        .domain([0, 1, 10, 30, 100, 500])
-        .range(d3.schemeBlues[7]);
+        .domain([0, 50, 200, 400, 800, 1000, 1200])
+        .range(d3.schemeBlues[8]);
 
     // create a tooltip
     const Tooltip = d3.select("body")
@@ -42,6 +42,18 @@
     // .style("left", "0px")
     // .style("top", "0px")
     // .html("Hello")
+
+    const zoom = d3.zoom()
+        .scaleExtent([1, 8])
+        .translateExtent([[0, 0], [width, height]])
+        .on('zoom', zoomed);
+
+    svg.call(zoom);
+
+    function zoomed(event) {
+        svg.selectAll('path') // To prevent stroke width from scaling
+            .attr('transform', event.transform);
+    }
 
     // Load external data and boot
     Promise.all([
@@ -75,9 +87,9 @@
 
 
                 Tooltip.style("opacity", 1)
-                    .html("Zip: " + d.properties.ZCTA5CE10)
+                    .html(`Zip: ${d.properties.ZCTA5CE10}<br/> Total: ${d.total}`)
                     .style("left", (event.x) - 40 + "px")
-                    .style("top", (event.y) - 40 + "px")
+                    .style("top", (event.y) - 60 + "px")
 
             }
             var mousemove = function (event, d) {
@@ -128,6 +140,8 @@
                 .on("click", mouseover)
                 .on("mousemove", mousemove)
                 .on("mouseleave", mouseleave)
+
+
 
 
 
