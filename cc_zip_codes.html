@@ -26,19 +26,22 @@
     const colorScale = d3.scaleThreshold()
         //.domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
         .domain([0, 50, 200, 400, 800, 1000, 1200])
-        .range(d3.schemeBlues[8]);
+        .range(d3.schemeBlues[7]);
 
     // create a tooltip
     const Tooltip = d3.select("body")
         .append("div")
         .attr("class", "tooltip")
         //.style("opacity", 1)
-        .style("background-color", "white")
-        .style("border", "solid")
-        .style("border-width", "2px")
+        .style("background-color", "#0000008a")
+        // .style("border", "solid")
+        // .style("border-width", "2px")
         .style("border-radius", "5px")
         .style("padding", "5px")
         .style("position", "absolute")
+        .style("opacity", 0.9)
+        .style("color", "white")
+        .style("font-family", "Arial, Verdana, Sans-Serif")
     // .style("left", "0px")
     // .style("top", "0px")
     // .html("Hello")
@@ -88,7 +91,7 @@
                     .style("opacity", 1)
 
 
-                Tooltip.style("opacity", 1)
+                Tooltip.style("opacity", 0.9)
                     .html(`Zip: ${d.properties.ZCTA5CE10}<br/> Total: ${d.total}`)
                     .style("left", (event.x) - 40 + "px")
                     .style("top", (event.y) - 60 + "px")
@@ -105,7 +108,7 @@
                 d3.selectAll(".zip-code-area")
                     .transition()
                     .duration(200)
-                    .style("opacity", .8)
+                    .style("opacity", 1)
                 d3.select(this)
                     .style("stroke", "transparent")
                 //.transition()
@@ -147,7 +150,7 @@
                 })
                 .style("stroke", "transparent")
                 .attr("class", function (d) { return "zip-code-area" })
-                .style("opacity", .8)
+                .style("opacity", 1)
                 .on("mouseover", mouseover)
                 .on("click", mouseover)
                 .on("mousemove", mousemove)
