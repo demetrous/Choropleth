@@ -46,6 +46,8 @@
     // .style("top", "0px")
     // .html("Hello")
 
+
+
     const zoom = d3.zoom()
         .scaleExtent([1, 8])
         .translateExtent([[0, 0], [width, height]])
@@ -61,7 +63,7 @@
     // Load external data and boot
     Promise.all([
         //d3.json("world.geojson.json"),
-        d3.json("nv_nevada_zip_codes_geo.min.json"),
+        d3.json("clark-county-zip-codes.json"),
         d3.json("USA_NV_Clark.geo.json"),
         d3.csv("Students-by-Zip-Code-Fall-2022.csv", function (d) {
             //console.log(d)
@@ -69,10 +71,10 @@
             data.set(d.ZIP_CODE, +d.HEADCOUNT)
         })]).then(function (loadData) {
             let topo = loadData[0]
-            let cc = loadData[1]
+            let clarkCounty = loadData[1]
 
 
-            console.log(cc)
+            console.log(clarkCounty)
 
 
             // Three function that change the tooltip when user hover / move / leave a cell
@@ -120,9 +122,12 @@
                     .style("top", 0 + "px")
             }
 
+
+
+
             svg.append("g")
                 .selectAll("path")
-                .data(cc.features)
+                .data(clarkCounty.features)
                 .enter()
                 .append("path")
                 // draw each zip code area

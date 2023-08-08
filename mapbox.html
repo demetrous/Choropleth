@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Display a map on a webpage</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: relative;
+            z-index: 0;
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZGVtZXRyb3VzIiwiYSI6ImNrdGo4MHA5dzE5ZGUyd3VleWx0ODBxODkifQ.H0Ixl1-c19j7t1uKETuMTQ';
+        const map = new mapboxgl.Map({
+            container: 'map', // container ID
+            // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+            style: 'mapbox://styles/mapbox/streets-v12', // style URL
+            center: [-115, 36], // starting position [lng, lat]
+            zoom: 9 // starting zoom
+        });
+
+        var container = map.getCanvasContainer();
+        var svg = d3
+            .select(container)
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", "500")
+            .style("position", "absolute")
+            .style("z-index", 2);
+
+        function project(d) {
+            return map.project(new mapboxgl.LngLat(d[0], d[1]));
+        }
+
+        var data = [
+            [-115.5, 36.05],
+            [-115.45, 36.0],
+            [-115.55, 36.0],
+        ];
+
+        var dots = svg
+            .selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("r", 20)
+            .style("fill", "#ff0000");
+
+        function render() {
+            dots
+                .attr("cx", function (d) {
+                    return project(d).x;
+                })
+                .attr("cy", function (d) {
+                    return project(d).y;
+                });
+        }
+
+        map.on("viewreset", render);
+        map.on("move", render);
+        map.on("moveend", render);
+        render(); // Call once to render
+
+
+    </script>
+
+</body>
+
+</html>
