@@ -59,15 +59,17 @@
     Promise.all([
         //d3.json("world.geojson.json"),
         d3.json("nv_nevada_zip_codes_geo.min.json"),
+        d3.json("USA_NV_Clark.geo.json"),
         d3.csv("Students-by-Zip-Code-Fall-2022.csv", function (d) {
             //console.log(d)
             //data.set(d.code, +d.pop)
             data.set(d.ZIP_CODE, +d.HEADCOUNT)
         })]).then(function (loadData) {
             let topo = loadData[0]
+            let cc = loadData[1]
 
 
-
+            console.log(cc)
 
 
             // Three function that change the tooltip when user hover / move / leave a cell
@@ -115,7 +117,17 @@
                     .style("top", 0 + "px")
             }
 
-
+            svg.append("g")
+                .selectAll("path")
+                .data(cc.features)
+                .enter()
+                .append("path")
+                // draw each zip code area
+                .attr("d", d3.geoPath()
+                    .projection(projection)
+                )
+                .style("stroke", "black")
+                .attr("fill", "transparent")
 
             // Draw the map
             svg.append("g")
@@ -140,6 +152,8 @@
                 .on("click", mouseover)
                 .on("mousemove", mousemove)
                 .on("mouseleave", mouseleave)
+
+
 
 
 
