@@ -76,7 +76,7 @@
 
     <script type="text/javascript">
 
-        var map = L.map('map').setView([36, -115], 9);
+        var map = L.map('map').setView([36.107817, -115.143417], 9);
 
         var tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 14,
@@ -129,8 +129,8 @@
 
 
             layer.setStyle({
-                weight: 1,
-                color: '#666',
+                weight: 2,
+                color: 'blue',
                 dashArray: '',
                 fillOpacity: 0.7
             });
@@ -143,9 +143,11 @@
         }
 
         var geojson;
+        var unlvGeojson;
 
         function resetHighlight(e) {
             geojson.resetStyle(e.target);
+            unlvGeojson.bringToFront();
             info.update();
         }
 
@@ -166,6 +168,7 @@
 
         Promise.all([
             d3.json("clark-county-zip-codes.json"),
+            d3.json("unlv-campus.geojson"),
             d3.csv("Students-by-Zip-Code-Fall-2022.csv", function (d) {
 
 
@@ -173,6 +176,9 @@
 
             })]).then(function (loadData) {
                 let json = loadData[0]
+                let unlvShape = loadData[1]
+
+                console.log(unlvShape)
 
                 json.features.forEach(element => {
                     element.properties.density = hashMap.get(element.properties.ZCTA5CE10) ?? 0
@@ -185,6 +191,22 @@
                     onEachFeature: onEachFeature
                 }).addTo(map);
 
+                unlvGeojson = L.geoJson(unlvShape, {
+                    color: 'red',
+                    fill: "red",
+                    //fillOpacity: 0.8
+                    //style: style,
+                    //onEachFeature: onEachFeature
+                }).addTo(map);
+
+                //unlvGeojson.bindPopup("UNLV").openPopup();
+
+                // var popup = L.popup()
+                //     .setLatLng([36, -115])
+                //     .setContent("I am a standalone popup.")
+                //     .openOn(map);
+
+                var popup = L.popup([36.107817, -115.143417], { content: 'UNLV', closeOnClick: false }).openOn(map);
 
             });
 
